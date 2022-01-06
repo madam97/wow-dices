@@ -1,70 +1,162 @@
-# Getting Started with Create React App
+# WoW Dices
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
 
-In the project directory, you can run:
+--------------------------
 
-### `npm start`
+# git segítség
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Git Dash
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- CMD-hez hasonló, mappán jobb klikk, majd Git Dash here
+- branch-ben külön lehet fájlokat módosítani, majd mainba adni
 
-### `npm test`
+## Parancsok
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```shell
+# felhasználó név megadása (emailnél user.email kell)
+git config --global user.name '...'
 
-### `npm run build`
+# local git repo létrehozása
+git init
+# hozzáadja a megadott fájl(okat) a staging area-ba, ami commit előtt van
+# <file> = *.html -> összes html fájl
+# <file> = .      -> összes fájl
+git add <file>
+# leveszi a megadott fájl(okat) a staging area-ból
+git rm --cached <file>
+# staging area-ban lévő fájlokat visszaadja
+git status
+# staging area fájljait elmenti a local repoba
+git commit -m 'kommit komment...'
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+# kiválassza, hogy melyik remote repo-ba töltse majd fel a fájlokat; bejelentkezés szükséges majd az első push-nál
+git remote add origin <repo elérési útja pl. https://github.com/...>
+# local repo -> remote repo
+git push
+# remote repo -> local repo
+git pull
+# klónolja a repo-t, létrehoz egy mappát hozzá
+git clone <repo elérési útja>
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+# létrehozza a 'login' branch-et
+git branch <branch>
+# kiválassza a megadott branch-et
+git checkout <branch>
+# összeolvassza az aktuális branch-et a megadottal
+git merge <branch> -m 'merge komment...'
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+# képernyő törlése
+clear
+# létrehozza a fájlt
+touch <file>
+```
 
-### `npm run eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+# ReactJS segítség
 
-## Learn More
+## Kódolás
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Projekt előkészítése
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```shell
+# új projekt
+npx create-react-app <projekt neve>
+ 
+# kód build, serve, stb. package.json-ben
 
-### Code Splitting
+# package.json alapján töltse le a szükséges package-eket
+npm install
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+# telepítések
+npm i react-router-dom@5          # react router
+npm i react-icons                 # ikonok használatához kell (pl. FontsAwesome)
+npm i moment, react-moment                # dátumkezeléshez
+npm i json-server                 # backend teszteléshez
+npm i node-sass                   # SASS használat - ezután lehet importálni .scss fájlokat
+npm i sass                        # SASS használat - ezután lehet importálni .scss fájlokat ÉS a legújabb sass-t lehet vele használni
+```
 
-### Analyzing the Bundle Size
+#### teszteléshez
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Ezt a package.json-ba kell írni, hogy lefusson az API hívás mock:
 
-### Making a Progressive Web App
+```json
+{
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx,ts,tsx}"
+    ],
+    "resetMocks": false
+  }
+}
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+### JSON server
 
-### Advanced Configuration
+1. json-server telepítése
+2. package.json-ba új scriptet kell felvinni 
+```json
+"scripts": {
+  ...
+  "server": "json-server --watch data/db.json --port 5000"
+},
+```
+3. npm run serve paranncsal tudjuk futtatni az API mock-ot
+4. db.json-ban tárolja a backendet
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
 
-### Deployment
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## Dokumentáció
 
-### `npm run build` fails to minify
+## Tesztelés
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### Teszt típusok
+
+- unit teszt - egy komponents tesztelése
+- integration teszt - komponensek közti kapcsolat tesztelése
+
+### React teszt fájl felépítése
+
+Fájl neve - KomponensNeve.test.js
+
+```js
+import { render, screen } from '@testing-library/react';
+import App from './App';
+
+test('teszt neve', async () => {                            // test() helyett it() is lehet
+  render(<App />);                                    // renderelni kell, mit tesztelünk
+  const linkElement = screen.getByText('/valami/i')   // elemet le kell kérnünk, amit tesztel
+                                                      // elemen végrehajtuk a tesztelni kívánt funkciót
+
+  expect(linkElement).toBeInTheDocument();            // tesztelés végeredményének ellenőrzése
+});
+```
+
+#### React elem lekérés
+
+- mi a különbség köztük?
+  - *By -> *All = hibát dob több elemnél -> array ad vissza mindig
+  - get -> find = nem aszinkron -> aszinkron
+  - get -> query = hibát dob, ha nincs elem -> nem dob hibát, ha nincs elem
+- metódusok sorrendje
+  - mindenki eléri (pl. user)
+    - getByRole
+    - getByLabelText
+    - getByPlaceholder
+    - getByText
+  - szemantikus lekérések (pl. screen reader)
+    - getByAltText
+    - getByTitle
+  - teszt id
+    - getByTestId
+
+|           | getBy   | findBy  | queryBy | getAllBy  | findAllBy | queryAllBy  |
+| --------- | ------- | ------- | ------- | --------- | --------- | ----------- |
+| no match  | error   | error   | null    | error     | error     | array       |
+| 1 match   | return  | return  | return  | array     | array     | array       |
+| 1+ match  | error   | error   | error   | array     | array     | array       |
+| await     | no      | yes     | no      | no        | yes       | no          |

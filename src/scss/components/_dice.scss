@@ -1,0 +1,104 @@
+@use "sass:math";
+
+$dice-w-half:       $dice-w * 0.5;
+$dice-h:            $dice-w-half * math.sqrt(3);
+$dice-side-tilt:    math.atan(1 / math.sqrt(2));
+$dice-sides:        (8, 5, 4, 1, 7, 6, 3, 2);
+
+.dice {
+  display: inline-block;
+  width: $dice-w;
+  height: $dice-h * 2;
+  margin: 0 10px;
+  transition: $anim-time;
+  transform-style: preserve-3d;
+
+  &.dice-0,
+  &.dice-8 { transform: rotateY(0deg) rotateX(-$dice-side-tilt); }
+  &.dice-5 { transform: rotateY(270deg) rotateZ($dice-side-tilt); }
+  &.dice-4 { transform: rotateY(180deg) rotateX($dice-side-tilt); }
+  &.dice-1 { transform: rotateY(90deg) rotateZ(-$dice-side-tilt); }
+  &.dice-7 { transform: rotateY(0deg) rotateX(-$dice-side-tilt) rotateZ(180deg); }
+  &.dice-6 { transform: rotateY(270deg) rotateZ($dice-side-tilt) rotateX(180deg); }
+  &.dice-3 { transform: rotateY(180deg) rotateX($dice-side-tilt) rotateZ(180deg); }
+  &.dice-2 { transform: rotateY(90deg) rotateZ(-$dice-side-tilt) rotateX(180deg); }
+}
+
+.dice-side {
+  position: absolute;
+  display: block;
+  width: $dice-w;
+  height: $dice-h;
+  color: $white;
+  text-align: center;
+  font-size: $dice-w-half;
+  font-weight: bold;
+  font-family: Arial;
+  line-height: $dice-w * 1.125;
+  transition: $anim-time;
+
+  // Not active sides are darker
+  .dice.dice-0 &:not(:nth-child(1)) { filter: brightness(0.8); }
+  @for $i from 1 through 8 {
+    .dice.dice-#{nth($dice-sides, $i)} &:not(:nth-child(#{$i})) {
+      filter: brightness(0.8);
+    }
+  }
+  
+  // Hide text on dice with 0 value
+  .dice.dice-0.dice-red & { color: $red; }
+  .dice-0.dice-blue & { color: $blue; }
+  .dice-0.dice-green & { color: $green; }
+
+  &::before {
+    z-index: -2;
+    border-right: $dice-w-half solid transparent;
+    border-bottom: $dice-h solid $black;
+    border-left: $dice-w-half solid transparent;
+  }
+
+  &::after {
+    $dice-w-sm: $dice-w - $dice-border * 2;
+    $dice-h-sm: $dice-w-sm * math.sqrt(3) * 0.5;
+    $dide-h-diff: ($dice-w - $dice-w-sm) / (2 * math.cos(30deg));
+
+    // opacity: 0.5;
+    z-index: -1;
+    transform: translate($dice-border, $dide-h-diff);
+    border-right: ($dice-w-sm * 0.5) solid transparent;
+    border-bottom: ($dice-h-sm) solid $black;
+    border-left: ($dice-w-sm * 0.5) solid transparent;
+  }
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 0;
+    width: 0;
+    border-top: 0;
+
+    .dice.dice-red & { border-bottom-color: $red; }
+    .dice.dice-blue & { border-bottom-color: $blue; }
+    .dice.dice-green & { border-bottom-color: $green; }
+  }
+
+  &::before {
+    .dice.dice-selected & { border-bottom-color: $white; }
+  }
+
+  transform-origin: 50% 100%;
+
+  @for $i from 1 through 4 {
+    &.dice-side:nth-child(#{$i}) {
+      transform: rotateY(90deg * ($i - 1)) translateZ($dice-w-half) rotateX($dice-side-tilt);
+    }
+  }
+  @for $i from 5 through 8 {
+    &.dice-side:nth-child(#{$i}) {
+      transform: rotateY(90deg * ($i - 5)) translateZ($dice-w-half) rotateX(180deg - $dice-side-tilt) scaleX(-1);
+    }
+  }
+}
