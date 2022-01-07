@@ -15,6 +15,8 @@ body {
 }
 
 .heading-threat {
+  border: 0;
+  background: transparent;
   font-size: 1.8em;
   letter-spacing: 1.5px;
 }
@@ -24,9 +26,8 @@ body {
   font-weight: bold;
 }
 
-
-.btn-roll {
-  padding: 15px 20px;
+.btn {
+  padding: 8px 10px;
   border: 2px solid $white;
   border-radius: 10px;
   background: transparent;
@@ -41,4 +42,8 @@ body {
     color: $black;
     background: $white;
   }
+}
+
+.btn-lg {
+  padding: 15px 20px;
 }

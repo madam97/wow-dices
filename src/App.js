@@ -84,8 +84,25 @@ function App() {
 
   return (
     <div className="App">
-      {activeStep === 'dice-pool' && <DicePool threat={threat} dices={dices} addDice={addDice} removeDice={removeDice} stepAction={stepDicePool} />}
-      {activeStep === 'reroll' && <Reroll threat={threat} dices={dices} addDice={addDice} removeDice={removeDice} />}
+      {activeStep === 'dice-pool' && 
+        <DicePool 
+          threat={threat} 
+          dices={dices} 
+          setThreat={setThreat} 
+          addDice={addDice} 
+          removeDice={removeDice} 
+          stepAction={stepDicePool} 
+        />
+      }
+      {activeStep === 'reroll' && 
+        <Reroll 
+          threat={threat}
+          dices={dices}
+          setThreat={setThreat} 
+          addDice={addDice}
+          removeDice={removeDice}
+        />
+      }
     </div>
   );
 }

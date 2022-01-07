@@ -1,11 +1,10 @@
 import DiceGroup from '../components/DiceGroup';
+import RowThreat from '../components/RowThreat';
 
 export default function Reroll({ threat, dices, addDice, removeDice }) {
   return (
     <div className="step">
-      <div className="row row-centered">
-        <p className="heading heading-threat">Threat {threat}</p>
-      </div>
+      <RowThreat threat={threat} />
 
       {Object.keys(dices).map((color) => (
         <div key={color} className="row">
@@ -18,7 +17,7 @@ export default function Reroll({ threat, dices, addDice, removeDice }) {
       ))}
 
       <div className="row row-centered">
-        <button className="btn-roll">Reroll</button>
+        <button className="btn btn-lg">Reroll</button>
       </div>
     </div>
   )
