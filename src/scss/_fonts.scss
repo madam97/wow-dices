@@ -1,0 +1,20 @@
+@font-face {
+  font-family: 'Morpheus';
+  font-weight: normal;
+  src: url(../assets/fonts/Morpheus/Morpheus.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: 'Flair';
+  font-weight: normal;
+  src: url(../assets/fonts/Flair/FlairNormal.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: 'Flair';
+  font-weight: bold;
+  src: url(../assets/fonts/Flair/FlairBold.ttf) format('truetype');
+}
+
+$font-morpheus:   'Morpheus', Arial, sans-serif;
+$font-flair:      'Flair', Arial, sans-serif;

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import DicePool from './steps/DicePool';
 import Reroll from './steps/Reroll';
 import Resolution from './steps/Resolution';
+import Background from './assets/images/azeroth.jpg';
 
 function App() {
 
@@ -153,6 +154,10 @@ function App() {
 
   return (
     <div className="App">
+      <div className="img-bg">
+        <img src={Background} alt="Azeroth map background" />
+      </div>
+
       {activeStep === 'dice-pool' && 
         <DicePool 
           threat={threat} 

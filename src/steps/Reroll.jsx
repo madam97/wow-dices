@@ -26,7 +26,7 @@ export default function Reroll({ threat, reroll, dices, stepAction, setThreat, s
         {showPopup && <PopupNumber value={reroll} max="30" setValue={setReroll} setShowPopup={setShowPopup} />}
 
         {reroll > 0 && <button className="btn btn-lg" onClick={() => stepAction()}>Reroll</button>}
-        {reroll == 0 && <button className="btn btn-lg" onClick={() => stepAction(true)}>End</button>}
+        {reroll === 0 && <button className="btn btn-lg" onClick={() => stepAction(true)}>End</button>}
       </div>
     </div>
   )
