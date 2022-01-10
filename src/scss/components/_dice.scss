@@ -6,25 +6,60 @@ $dice-side-tilt:    math.atan(1 / math.sqrt(2));
 $dice-sides:        (8, 5, 4, 1, 7, 6, 3, 2);
 
 .dice {
+  position: relative;
+  display: inline-block;
+  margin: 0 10px;
+
+  &.dice-good::before,
+  &.dice-bad::before {
+    content: "";
+    z-index: -1;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: $dice-w * 0.75;
+    height: $dice-w * 0.75;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  &.dice-good::before {
+    background: $good;
+    box-shadow: 0 0 30px $good;
+  }
+  
+  &.dice-bad::before {
+    background: $bad;
+    box-shadow: 0 0 30px $bad;
+  }
+
+  &.dice-rerolled {
+    opacity: 0.7;
+  }
+}
+
+.dice-sides {
+  cursor: pointer;
   display: inline-block;
   width: $dice-w;
   height: $dice-h * 2;
-  margin: 0 10px;
   transition: $anim-time;
   transform-style: preserve-3d;
 
-  &.dice-0,
-  &.dice-8 { transform: rotateY(0deg) rotateX(-$dice-side-tilt); }
-  &.dice-5 { transform: rotateY(270deg) rotateZ($dice-side-tilt); }
-  &.dice-4 { transform: rotateY(180deg) rotateX($dice-side-tilt); }
-  &.dice-1 { transform: rotateY(90deg) rotateZ(-$dice-side-tilt); }
-  &.dice-7 { transform: rotateY(0deg) rotateX(-$dice-side-tilt) rotateZ(180deg); }
-  &.dice-6 { transform: rotateY(270deg) rotateZ($dice-side-tilt) rotateX(180deg); }
-  &.dice-3 { transform: rotateY(180deg) rotateX($dice-side-tilt) rotateZ(180deg); }
-  &.dice-2 { transform: rotateY(90deg) rotateZ(-$dice-side-tilt) rotateX(180deg); }
+  .dice.dice-0 &,
+  .dice.dice-8 & { transform: rotateY(0deg) rotateX(-$dice-side-tilt); }
+  .dice.dice-5 & { transform: rotateY(270deg) rotateZ($dice-side-tilt); }
+  .dice.dice-4 & { transform: rotateY(180deg) rotateX($dice-side-tilt); }
+  .dice.dice-1 & { transform: rotateY(90deg) rotateZ(-$dice-side-tilt); }
+  .dice.dice-7 & { transform: rotateY(0deg) rotateX(-$dice-side-tilt) rotateZ(180deg); }
+  .dice.dice-6 & { transform: rotateY(270deg) rotateZ($dice-side-tilt) rotateX(180deg); }
+  .dice.dice-3 & { transform: rotateY(180deg) rotateX($dice-side-tilt) rotateZ(180deg); }
+  .dice.dice-2 & { transform: rotateY(90deg) rotateZ(-$dice-side-tilt) rotateX(180deg); }
 }
 
 .dice-side {
+  @include unselect;
+
   position: absolute;
   display: block;
   width: $dice-w;
@@ -55,6 +90,7 @@ $dice-sides:        (8, 5, 4, 1, 7, 6, 3, 2);
     border-right: $dice-w-half solid transparent;
     border-bottom: $dice-h solid $black;
     border-left: $dice-w-half solid transparent;
+    transition: border-color $anim-time;
   }
 
   &::after {

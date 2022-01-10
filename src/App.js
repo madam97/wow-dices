@@ -1,24 +1,32 @@
 import { useState } from 'react';
 import DicePool from './steps/DicePool';
 import Reroll from './steps/Reroll';
+import Resolution from './steps/Resolution';
 
 function App() {
 
   const [activeStep, setActiveStep] = useState('dice-pool');
   const [threat, setThreat] = useState(5);
+  const [reroll, setReroll] = useState(1);
 
   const [dices, setDices] = useState({
     red: {
       count: 3,
-      values: [0,0,0]
+      values: [0,0,0],
+      selected: [],
+      rerolled: []
     },
     blue: {
       count: 3,
-      values: [0,0,0]
+      values: [0,0,0],
+      selected: [],
+      rerolled: []
     },
     green: {
       count: 3,
-      values: [0,0,0]
+      values: [0,0,0],
+      selected: [],
+      rerolled: []
     }
   });
 
@@ -28,6 +36,15 @@ function App() {
   const stepDicePool = () => {
     rollAllDices();
     setActiveStep('reroll');
+  }
+
+  const stepReroll = (willChangeActiveStep = false) => {
+    if (willChangeActiveStep) {
+      setActiveStep('');
+    } else {
+      let countOfRerolls = rerollSelectedDices();
+      setReroll(reroll - countOfRerolls);
+    }
   }
 
 
@@ -74,9 +91,61 @@ function App() {
 
     setDices(newDices);
   }
+  
+  const rerollSelectedDices = () => {
+    let newDices = { ...dices };
+    
+    let countOfRerolls = 0;
+    for (let color in newDices) {
+      for (let i of newDices[color].selected) {
+        if (newDices[color].rerolled.indexOf(i) === -1) {
+          newDices[color].values[i] = rollDice();
+          newDices[color].rerolled.push(i);
+          ++countOfRerolls;
+        }
+      }
+
+      newDices[color].selected = [];
+    }
+
+    setDices(newDices);
+
+    return countOfRerolls;
+  }
 
   const rollDice = () => {
     return Math.floor(Math.random() * 8) + 1;
+  }
+
+  /**
+   * Select or deselect dice
+   * @param {string} color 
+   * @param {int} ind 
+   */
+  const toggleDice = (color, ind) => {
+    let newDices = { ...dices };
+
+    // Max 
+    let selectedCount = 0;
+    for (let color in newDices) {
+      selectedCount += newDices[color].selected.length;
+    }
+
+    // Select / deselect dice
+    let pos = newDices[color].selected.indexOf(ind);
+
+    console.log(color, ind, pos, selectedCount, reroll);
+
+    // Deselect dice
+    if (pos > -1) {
+      newDices[color].selected.splice(pos, 1);
+    } 
+    // Select dice if number of selected dices < reroll count
+    else if (selectedCount < reroll) {
+      newDices[color].selected.push(ind);
+    }
+
+    setDices(newDices);
   }
 
 
@@ -88,19 +157,28 @@ function App() {
         <DicePool 
           threat={threat} 
           dices={dices} 
+          stepAction={stepDicePool} 
           setThreat={setThreat} 
           addDice={addDice} 
           removeDice={removeDice} 
-          stepAction={stepDicePool} 
+          toggleDice={toggleDice}
         />
       }
       {activeStep === 'reroll' && 
         <Reroll 
           threat={threat}
+          reroll={reroll}
           dices={dices}
+          stepAction={stepReroll} 
           setThreat={setThreat} 
+          setReroll={setReroll}
           addDice={addDice}
           removeDice={removeDice}
+          toggleDice={toggleDice}
+        />
+      }
+      {activeStep === 'resolution' &&
+        <Resolution 
         />
       }
     </div>

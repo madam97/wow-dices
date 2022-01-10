@@ -1,16 +1,16 @@
 import DiceGroup from '../components/DiceGroup';
-import RowThreat from '../components/RowThreat';
+import Threat from '../components/Threat';
 
-export default function DicePool({ threat, dices, addDice, setThreat, removeDice, stepAction }) {
+export default function DicePool({ threat, dices, stepAction, setThreat, addDice, removeDice, toggleDice }) {
   return (
     <div className="step">
-      <RowThreat threat={threat} setThreat={setThreat} />
+      <Threat threat={threat} setThreat={setThreat} />
 
       {Object.keys(dices).map((color) => (
         <div key={color} className="row">
           <button className="row-btn" onClick={() => removeDice(color)}>-</button>
           
-          <DiceGroup willShowCount={true} dices={dices[color]} color={color} />
+          <DiceGroup willShowCount={true} dices={dices[color]} color={color} threat={threat} toggleDice={toggleDice} />
 
           <button className="row-btn" onClick={() => addDice(color, 0)}>+</button>
         </div>
