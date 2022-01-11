@@ -2,6 +2,7 @@ import { useState } from 'react';
 import DicePool from './steps/DicePool';
 import Reroll from './steps/Reroll';
 import Resolution from './steps/Resolution';
+import Header from './components/Header';
 import Background from './assets/images/azeroth.jpg';
 
 function App() {
@@ -12,20 +13,20 @@ function App() {
 
   const [dices, setDices] = useState({
     red: {
-      count: 3,
-      values: [0,0,0],
+      count: 0,
+      values: [],
       selected: [],
       rerolled: []
     },
     blue: {
-      count: 3,
-      values: [0,0,0],
+      count: 0,
+      values: [],
       selected: [],
       rerolled: []
     },
     green: {
-      count: 3,
-      values: [0,0,0],
+      count: 0,
+      values: [],
       selected: [],
       rerolled: []
     }
@@ -41,11 +42,26 @@ function App() {
 
   const stepReroll = (willChangeActiveStep = false) => {
     if (willChangeActiveStep) {
-      setActiveStep('');
+      setActiveStep('resolution');
     } else {
       let countOfRerolls = rerollSelectedDices();
       setReroll(reroll - countOfRerolls);
     }
+  }
+
+  const stepResolution = () => {
+    let newDices = { ...dices };
+
+    for (let color in newDices) {
+      for (let i = 0; i < newDices[color].count; ++i) {
+        newDices[color].values[i] = 0;
+      }
+      newDices[color].selected = [];
+      newDices[color].rerolled = [];
+    }
+    
+    setDices(newDices);
+    setActiveStep('dice-pool');
   }
 
 
@@ -158,36 +174,38 @@ function App() {
         <img src={Background} alt="Azeroth map background" />
       </div>
 
-      {activeStep === 'dice-pool' && 
-        <DicePool 
-          threat={threat} 
-          reroll={reroll}
-          dices={dices} 
-          stepAction={stepDicePool} 
-          setThreat={setThreat} 
-          setReroll={setReroll}
-          addDice={addDice} 
-          removeDice={removeDice} 
-          toggleDice={toggleDice}
-        />
-      }
-      {activeStep === 'reroll' && 
-        <Reroll 
-          threat={threat}
-          reroll={reroll}
-          dices={dices}
-          stepAction={stepReroll} 
-          setThreat={setThreat} 
-          setReroll={setReroll}
-          addDice={addDice}
-          removeDice={removeDice}
-          toggleDice={toggleDice}
-        />
-      }
-      {activeStep === 'resolution' &&
-        <Resolution 
-        />
-      }
+      <div className="step">
+        <Header threat={threat} reroll={reroll} setThreat={setThreat} setReroll={setReroll} />
+
+        {activeStep === 'dice-pool' && 
+          <DicePool 
+            threat={threat} 
+            dices={dices} 
+            stepAction={stepDicePool} 
+            addDice={addDice} 
+            removeDice={removeDice} 
+            toggleDice={toggleDice}
+          />
+        }
+        {activeStep === 'reroll' && 
+          <Reroll 
+            threat={threat}
+            reroll={reroll}
+            dices={dices}
+            stepAction={stepReroll} 
+            addDice={addDice}
+            removeDice={removeDice}
+            toggleDice={toggleDice}
+          />
+        }
+        {activeStep === 'resolution' &&
+          <Resolution 
+            threat={threat} 
+            dices={dices}
+            stepAction={stepResolution} 
+          />
+        }
+      </div>
     </div>
   );
 }

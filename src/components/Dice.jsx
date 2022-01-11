@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const Dice = ({ index, value, color, threat, selectedDices, rerolledDices, toggleDice }) => {
+const Dice = ({ index, value, color, threat, count, selectedDices, rerolledDices, toggleDice }) => {
 
   const [canSelect, setCanSelect] = useState(index > -1 && rerolledDices.indexOf(index) === -1);
   const [diceClass, setDiceClass] = useState(`dice dice-${color} dice-0`);
@@ -8,7 +8,7 @@ const Dice = ({ index, value, color, threat, selectedDices, rerolledDices, toggl
   const setClass = () => {
     let newDiceClass = `dice dice-${color} dice-${value}`;
 
-    if (value >= threat) {
+    if (threat > -1 && value >= threat) {
       newDiceClass += ' dice-good';
     }
     if (index > -1 && selectedDices.indexOf(index) > -1) {
@@ -24,10 +24,12 @@ const Dice = ({ index, value, color, threat, selectedDices, rerolledDices, toggl
   useEffect(() => {
     setCanSelect(index > -1 && rerolledDices.indexOf(index) === -1);
     setClass();
-  });
+  }, [index, rerolledDices, setClass]);
 
   return (
     <span className={diceClass} onClick={(e) => {if (canSelect) toggleDice(color, index)}} >
+      {count > -1 && <span className="dice-count">{count}</span>}
+      
       <span className="dice-sides">
         <span className="dice-side">8</span>
         <span className="dice-side">5</span>
@@ -45,7 +47,11 @@ const Dice = ({ index, value, color, threat, selectedDices, rerolledDices, toggl
 Dice.defaultProps = {
   index: -1,
   value: 0,
-  threat: 8
+  threat: -1,
+  count: -1,
+  selectedDices: [],
+  rolledDices: [],
+  toggleDice: (color, index) => {}
 };
 
 export default Dice;

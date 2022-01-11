@@ -9,30 +9,26 @@ body {
   background: rgb(95, 95, 95);
 }
 
-.heading {
-  margin: 0;
-  color: $white;
+.App {
+  position: relative;
 }
 
 .heading-value {
   padding: 0;
+  margin: 0;
   border: 0;
   background: transparent;
+  color: $white;
   font-family: $font-morpheus;
   font-size: 1.5em;
   letter-spacing: 1.5px;
-}
-
-.heading-dice-count {
-  font-family: $font-flair;
-  font-size: 1.5em;
-  font-weight: bold;
 }
 
 .row {
   position: relative;
   display: flex;
   justify-content: space-between;
+  padding: 0 10px;
 
   &.row-centered {
     align-items: center;
@@ -44,7 +40,7 @@ body {
   }
 
   &.row-header {
-    padding-bottom: 2.5%;
+    padding-bottom: 3%;
 
     .heading-value:not(:last-child)::after {
       content: '|';
@@ -67,6 +63,12 @@ body {
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
+    flex-grow: 1;
+  }
+
+  .row-inner-fixed {
+    flex-wrap: nowrap;
+    flex-grow: unset;
   }
 }
 
@@ -92,6 +94,10 @@ body {
   padding: 15px 20px;
   font-family: $font-morpheus;
   font-size: 1em;
+
+  &:not(:last-child) {
+    margin-right: 15px;
+  }
 }
 
 .img-bg {
@@ -126,4 +132,32 @@ body {
   .row:last-child {
     min-height: 15.5vh;
   }
+}
+
+.token {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding-right: 20px;
+  margin: 0 10px;
+  min-width: 110px;
+  border-right: 3px solid $white;
+
+  span {    
+    padding-bottom: 5px;
+    color: $white;
+    font-family: $font-flair;
+    font-size: 30px;
+  }
+
+  img {
+    margin-left: 10px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+  }
+
+  &.token-red img { box-shadow: 0 0 15px $red; }
+  &.token-blue img { box-shadow: 0 0 15px $blue; }
+  &.token-green img { box-shadow: 0 0 15px $green; }
 }

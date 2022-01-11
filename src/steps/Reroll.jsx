@@ -1,11 +1,8 @@
 import DiceGroup from '../components/DiceGroup';
-import Header from '../components/Header';
 
-export default function Reroll({ threat, reroll, dices, stepAction, setThreat, setReroll, addDice, removeDice, toggleDice }) {
+export default function Reroll({ threat, reroll, dices, stepAction, addDice, removeDice, toggleDice }) {
   return (
-    <div className="step">
-      <Header threat={threat} reroll={reroll} setThreat={setThreat} setReroll={setReroll} />
-
+    <>
       {Object.keys(dices).map((color) => (
         <div key={color} className="row">
           <button className="row-btn" onClick={() => removeDice(color)}>-</button>
@@ -18,8 +15,8 @@ export default function Reroll({ threat, reroll, dices, stepAction, setThreat, s
 
       <div className="row row-centered">
         {reroll > 0 && <button className="btn btn-lg" onClick={() => stepAction()}>Reroll</button>}
-        {reroll === 0 && <button className="btn btn-lg" onClick={() => stepAction(true)}>End</button>}
+        <button className="btn btn-lg" onClick={() => stepAction(true)}>End</button>
       </div>
-    </div>
+    </>
   )
 }
