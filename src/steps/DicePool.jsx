@@ -1,10 +1,10 @@
 import DiceGroup from '../components/DiceGroup';
-import Threat from '../components/Threat';
+import Header from '../components/Header';
 
-export default function DicePool({ threat, dices, stepAction, setThreat, addDice, removeDice, toggleDice }) {
+export default function DicePool({ threat, reroll, dices, stepAction, setThreat, setReroll, addDice, removeDice, toggleDice }) {
   return (
     <div className="step">
-      <Threat threat={threat} setThreat={setThreat} />
+      <Header threat={threat} reroll={reroll} setThreat={setThreat} setReroll={setReroll} />
 
       {Object.keys(dices).map((color) => (
         <div key={color} className="row">

@@ -154,16 +154,18 @@ function App() {
 
   return (
     <div className="App">
-      <div className="img-bg">
+      <div className="img-bg img-dark">
         <img src={Background} alt="Azeroth map background" />
       </div>
 
       {activeStep === 'dice-pool' && 
         <DicePool 
           threat={threat} 
+          reroll={reroll}
           dices={dices} 
           stepAction={stepDicePool} 
           setThreat={setThreat} 
+          setReroll={setReroll}
           addDice={addDice} 
           removeDice={removeDice} 
           toggleDice={toggleDice}

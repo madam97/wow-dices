@@ -1,15 +1,10 @@
-import { useState } from 'react';
 import DiceGroup from '../components/DiceGroup';
-import Threat from '../components/Threat';
-import PopupNumber from '../components/PopupNumber';
+import Header from '../components/Header';
 
 export default function Reroll({ threat, reroll, dices, stepAction, setThreat, setReroll, addDice, removeDice, toggleDice }) {
-  
-  const [showPopup, setShowPopup] = useState(false);
-
   return (
     <div className="step">
-      <Threat threat={threat} setThreat={setThreat} />
+      <Header threat={threat} reroll={reroll} setThreat={setThreat} setReroll={setReroll} />
 
       {Object.keys(dices).map((color) => (
         <div key={color} className="row">
@@ -22,9 +17,6 @@ export default function Reroll({ threat, reroll, dices, stepAction, setThreat, s
       ))}
 
       <div className="row row-centered">
-        <button className="heading heading-value" onClick={() => setShowPopup(true)}>Reroll {reroll}</button>
-        {showPopup && <PopupNumber value={reroll} max="30" setValue={setReroll} setShowPopup={setShowPopup} />}
-
         {reroll > 0 && <button className="btn btn-lg" onClick={() => stepAction()}>Reroll</button>}
         {reroll === 0 && <button className="btn btn-lg" onClick={() => stepAction(true)}>End</button>}
       </div>
