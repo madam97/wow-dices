@@ -2,7 +2,7 @@ import { useState } from 'react';
 import PopupNumber from './PopupNumber';
 import Background from '../assets/images/paper.png';
 
-const Header = ({ threat, reroll, setThreat, setReroll }) => {
+const Header = ({ character, threat, reroll, setActiveStep, setThreat, setReroll }) => {
 
   const [showThreatPopup, setShowThreatPopup] = useState(false);
   const [showRerollPopup, setShowRerollPopup] = useState(false);
@@ -34,6 +34,13 @@ const Header = ({ threat, reroll, setThreat, setReroll }) => {
       <div className="img-bg img-bottom-center">
         <img src={Background} alt="Paper" />
       </div>
+
+      <img
+        className={`img-char border-${character.faction}`}
+        src={character.img}
+        alt={character.alt}
+        onClick={() => setActiveStep('character')}
+      />
 
       <div>
         <button 

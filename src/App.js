@@ -4,12 +4,20 @@ import Reroll from './steps/Reroll';
 import Resolution from './steps/Resolution';
 import Header from './components/Header';
 import Background from './assets/images/azeroth.jpg';
+import Character from './steps/Character';
 
 function App() {
 
-  const [activeStep, setActiveStep] = useState('dice-pool');
+  const [activeStep, setActiveStep] = useState('character');
+  const [character, setCharacter] = useState({
+    faction: '',
+    class: '',
+    img: null,
+    alt: ''
+  });
   const [threat, setThreat] = useState(5);
   const [reroll, setReroll] = useState(1);
+
 
   const [dices, setDices] = useState({
     red: {
@@ -34,6 +42,10 @@ function App() {
 
 
   /// STEP ACTIONS
+
+  const stepCharacter = () => {
+    setActiveStep('dice-pool');
+  }
 
   const stepDicePool = () => {
     rollAllDices();
@@ -217,38 +229,56 @@ function App() {
         <img src={Background} alt="Azeroth map background" />
       </div>
 
-      <div className="step">
-        <Header threat={threat} reroll={reroll} setThreat={setThreatValue} setReroll={setRerollValue} />
+      {activeStep === 'character' && 
+        <Character 
+          character={character}
+          stepAction={stepCharacter}
+          setCharacter={setCharacter}
+        />
+      }
 
-        {activeStep === 'dice-pool' && 
-          <DicePool 
+      {activeStep !== 'character' && 
+        <div className="step">
+          <Header 
+            character={character} 
             threat={threat} 
-            dices={dices} 
-            stepAction={stepDicePool} 
-            addDice={addDice} 
-            removeDice={removeDice} 
-            toggleDice={toggleDice}
+            reroll={reroll} 
+            setActiveStep={setActiveStep}
+            setThreat={setThreatValue} 
+            setReroll={setRerollValue} 
           />
-        }
-        {activeStep === 'reroll' && 
-          <Reroll 
-            threat={threat}
-            reroll={reroll}
-            dices={dices}
-            stepAction={stepReroll} 
-            addDice={addDice}
-            removeDice={removeDice}
-            toggleDice={toggleDice}
-          />
-        }
-        {activeStep === 'resolution' &&
-          <Resolution 
-            threat={threat} 
-            dices={dices}
-            stepAction={stepResolution} 
-          />
-        }
-      </div>
+
+          {activeStep === 'dice-pool' && 
+            <DicePool 
+              character={character}
+              threat={threat} 
+              dices={dices} 
+              stepAction={stepDicePool} 
+              addDice={addDice} 
+              removeDice={removeDice} 
+              toggleDice={toggleDice}
+            />
+          }
+          {activeStep === 'reroll' && 
+            <Reroll 
+              threat={threat}
+              reroll={reroll}
+              dices={dices}
+              stepAction={stepReroll} 
+              addDice={addDice}
+              removeDice={removeDice}
+              toggleDice={toggleDice}
+            />
+          }
+          {activeStep === 'resolution' &&
+            <Resolution 
+              threat={threat} 
+              dices={dices}
+              stepAction={stepResolution} 
+            />
+          }
+        </div>
+      }
     </div>
   );
 }

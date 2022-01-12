@@ -24,14 +24,14 @@ export default function Resolution({ threat, dices, stepAction}) {
     });
 
     setTokens(newTokens);
-  });
+  }, [threat, dices]);
 
   return (
     <>
       {Object.keys(dices).map((color) => (
         <div key={color} className="row row-centered dice-sm-container">
           <div className="row-inner row-inner-fixed">
-            <div class={`token token-${color}`}>
+            <div className={`token token-${color}`}>
               <span>{tokens[color]}</span>
               {color !== 'green' && <img src={TokenHit} alt="Hit token" />}
               {color === 'green' && <img src={TokenDef} alt="Defence token" />}
