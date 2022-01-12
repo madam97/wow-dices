@@ -65,6 +65,49 @@ function App() {
   }
 
 
+
+  /// GAME VALUE METHODS
+
+  /**
+   * Sets the threat value
+   * @param {int} threat 
+   */
+
+  const setThreatValue = (threat) => {
+    if (threat < 1) {
+      threat = 1;
+    } else if (threat > 8) {
+      threat = 8;
+    }
+
+    setThreat(threat);
+  }
+
+  /**
+   * Sets the reroll value and deselect selected dices
+   * @param {int} reroll 
+   */
+  const setRerollValue = (reroll) => {
+    // Deselect selected dices
+    let newDices = { ...dices };
+
+    for (let color in newDices) {
+      newDices[color].selected = [];
+    }
+    
+    setDices(newDices);
+
+    // Change reroll value
+    if (reroll < 0) {
+      reroll = 0;
+    } else if (reroll > 30) {
+      reroll = 30;
+    }
+
+    setReroll(reroll);
+  }
+
+
   /// DICE METHODS
 
   const addDice = (color, value) => {
@@ -175,7 +218,7 @@ function App() {
       </div>
 
       <div className="step">
-        <Header threat={threat} reroll={reroll} setThreat={setThreat} setReroll={setReroll} />
+        <Header threat={threat} reroll={reroll} setThreat={setThreatValue} setReroll={setRerollValue} />
 
         {activeStep === 'dice-pool' && 
           <DicePool 

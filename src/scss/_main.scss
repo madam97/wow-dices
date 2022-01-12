@@ -24,6 +24,10 @@ body {
   letter-spacing: 1.5px;
 }
 
+.hidden {
+  visibility: hidden;
+}
+
 .row {
   position: relative;
   display: flex;
@@ -73,30 +77,25 @@ body {
 }
 
 .btn {
-  padding: 8px 10px;
+  padding: 12px 18px;
   border: 2px solid $white;
   border-radius: 10px;
   background: fade-out($white, 0.85);
   color: $white;
-  font-size: 0.8em;
+  font-family: $font-morpheus;
+  font-size: 1em;
   letter-spacing: 1.5px;
   transition: $anim-time;
+
+  &:not(:last-child) {
+    margin-right: 15px;
+  }
 
   &:hover,
   &:active,
   &:focus {
     color: $black;
     background: $white;
-  }
-}
-
-.btn-lg {
-  padding: 15px 20px;
-  font-family: $font-morpheus;
-  font-size: 1em;
-
-  &:not(:last-child) {
-    margin-right: 15px;
   }
 }
 
@@ -124,6 +123,9 @@ body {
 }
 
 .step {
+  margin: auto;
+  max-width: 400px;
+
   .row {
     min-height: 23vh;
   }

@@ -43,7 +43,7 @@ export default function Resolution({ threat, dices, stepAction}) {
       ))}
 
       <div className="row row-centered">
-        <button className="btn btn-lg" onClick={stepAction}>New turn</button>
+        <button className="btn" onClick={stepAction}>New turn</button>
       </div>
     </>
   )
