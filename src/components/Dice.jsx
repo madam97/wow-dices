@@ -32,8 +32,20 @@ const Dice = ({ index, value, color, threat, count, selectedDices, rerolledDices
     setClass();
   }, [index, value, color, threat, selectedDices, rerolledDices]);
 
+  /**
+   * If the dice is selectable, will toggle its selection 
+   * @param {string} color blue, red or green
+   * @param {number} index Index of the dice
+   */
+  const handleClick = (color, index) => {
+    console.log(canSelect, color, index); 
+    if (canSelect) {
+      toggleDice(color, index);
+    }
+  }
+
   return (
-    <span className={diceClass} onClick={(e) => {if (canSelect) toggleDice(color, index)}} >
+    <span className={diceClass} onClick={() => handleClick(color, index)} >
       {count > -1 && <span className="dice-count">{count}</span>}
       
       <span className="dice-sides">

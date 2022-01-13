@@ -1,15 +1,17 @@
-import { classes, species } from '../data/character.js';
+import { classes, species, names } from '../data/character.js';
 
 export default function Character({ character, stepAction, setCharacter }) {
   return (
     <div className="step step-character">
-      <p>Choose your character</p>
+      {character.name === '' && <p>Choose your character</p>}
+      {character.name !== '' && <p>{character.name}</p>}
 
       <div>
         {Object.keys(species).map((faction) => (
           <div key={faction}>
             {Object.keys(species[faction]).map((c) => {
               let tmpCharacter = {
+                name: names[faction][c],
                 faction: faction, 
                 class: c, 
                 species: species[faction][c],

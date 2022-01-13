@@ -13,6 +13,7 @@ function App() {
 
   /** The chosen character */
   const [character, setCharacter] = useState({
+    name: '',
     faction: '',
     class: '',
     species: '',
@@ -28,13 +29,13 @@ function App() {
 
   /** Red, blue and green dices' count, rolled values, selected and rerolled dices's indexes */
   const [dices, setDices] = useState({
-    red: {
+    blue: {
       count: 0,
       values: [],
       selected: [],
       rerolled: []
     },
-    blue: {
+    red: {
       count: 0,
       values: [],
       selected: [],
@@ -86,17 +87,18 @@ function App() {
    * Action for the resolution step
    */
   const stepResolution = () => {
-    let newDices = { ...dices };
-
-    for (let color in newDices) {
-      for (let i = 0; i < newDices[color].count; ++i) {
-        newDices[color].values[i] = 0;
-      }
-      newDices[color].selected = [];
-      newDices[color].rerolled = [];
+    for (const color in dices) {
+      setDices((prevDices) => ({
+        ...prevDices,
+        [color]: {
+          ...prevDices[color],
+          values: new Array(prevDices[color].count).fill(0),
+          selected: [],
+          rerolled: []
+        }
+      }));
     }
     
-    setDices(newDices);
     setActiveStep('dice-pool');
   }
 
@@ -124,13 +126,15 @@ function App() {
    */
   const setRerollValue = (reroll) => {
     // Deselect selected dices
-    let newDices = { ...dices };
-
-    for (let color in newDices) {
-      newDices[color].selected = [];
+    for (const color in dices) {
+      setDices((prevDices) => ({
+        ...prevDices,
+        [color]: {
+          ...prevDices[color],
+          selected: []
+        }
+      }));
     }
-    
-    setDices(newDices);
 
     // Change reroll value
     if (reroll < 0) {
@@ -147,37 +151,48 @@ function App() {
 
   /**
    * Add a new dice of the given color
-   * @param {string} color red, blue or green
+   * @param {string} color blue, red or green
    * @param {number} value Value of the dice, if it is -1, will set a random value
    * @public
    */
   const addDice = (color, value = -1) => {
-    let newDices = { ...dices };
-
     // Max 10 dices
-    if (newDices[color].count < 10) {
-      ++newDices[color].count;
-      if (newDices[color].count > newDices[color].values.length) {
-        newDices[color].values.push(value !== -1 ? value : rollDice());
+    if (dices[color].count < 10) {
+      const count = dices[color].count + 1;
+      const values = dices[color].values.slice();
+
+      if (count > values.length) {
+        values.push(value !== -1 ? value : rollDice());
       }
 
-      setDices(newDices);
+      setDices((prevDices) => ({
+        ...prevDices,
+        [color]: {
+          ...prevDices[color],
+          count,
+          values
+        }
+      }));
     }
   }
 
   /**
    * Removes the last rolled dice of the given color
-   * @param {string} color red, blue or green
+   * @param {string} color blue, red or green
    * @public
    */
   const removeDice = (color) => {
-    let newDices = { ...dices };
-
     // Min 0 dices
-    if (newDices[color].count > 0) {
-      --newDices[color].count;
+    if (dices[color].count > 0) {
+      const count = dices[color].count - 1;
 
-      setDices(newDices);
+      setDices((prevDices) => ({
+        ...prevDices,
+        [color]: {
+          ...prevDices[color],
+          count
+        }
+      }));
     }
   }
 
@@ -185,16 +200,21 @@ function App() {
    * Rolls every dices
    */
   const rollAllDices = () => {
-    let newDices = { ...dices };
+    for (const color in dices) {
+      const values = [];
 
-    for (let color in newDices) {
-      newDices[color].values = [];
-      for (let i = 0; i < newDices[color].count; ++i) {
-        newDices[color].values.push( rollDice() );
+      for (let i = 0; i < dices[color].count; ++i) {
+        values.push( rollDice() );
       }
-    }
 
-    setDices(newDices);
+      setDices((prevDices) => ({
+        ...prevDices,
+        [color]: {
+          ...prevDices[color],
+          values
+        }
+      }));
+    }
   }
   
   /**
@@ -202,22 +222,32 @@ function App() {
    * @returns Number of rerolled dices
    */
   const rerollSelectedDices = () => {
-    let newDices = { ...dices };
-    
     let countOfRerolls = 0;
-    for (let color in newDices) {
-      for (let i of newDices[color].selected) {
-        if (newDices[color].rerolled.indexOf(i) === -1) {
-          newDices[color].values[i] = rollDice();
-          newDices[color].rerolled.push(i);
-          ++countOfRerolls;
+
+    for (const color in dices) {
+      if (dices[color].selected.length > 0) {
+        const values = dices[color].values.slice();
+        const rerolled = dices[color].rerolled.slice();
+
+        for (const i of dices[color].selected) {
+          if (rerolled.indexOf(i) === -1) {
+            values[i] = rollDice();
+            rerolled.push(i);
+            ++countOfRerolls;
+          }
         }
+
+        setDices((prevDices) => ({
+          ...prevDices,
+          [color]: {
+            ...prevDices[color],
+            values,
+            selected: [],
+            rerolled
+          }
+        }));
       }
-
-      newDices[color].selected = [];
     }
-
-    setDices(newDices);
 
     return countOfRerolls;
   }
@@ -236,29 +266,33 @@ function App() {
    * @param {int} ind 
    */
   const toggleDice = (color, ind) => {
-    let newDices = { ...dices };
+    const selected = dices[color].selected.slice();
 
     // Max 
     let selectedCount = 0;
-    for (let color in newDices) {
-      selectedCount += newDices[color].selected.length;
+    for (let color in dices) {
+      selectedCount += dices[color].selected.length;
     }
 
     // Select / deselect dice
-    let pos = newDices[color].selected.indexOf(ind);
-
-    console.log(color, ind, pos, selectedCount, reroll);
+    let pos = selected.indexOf(ind);
 
     // Deselect dice
     if (pos > -1) {
-      newDices[color].selected.splice(pos, 1);
+      selected.splice(pos, 1);
     } 
     // Select dice if number of selected dices < reroll count
     else if (selectedCount < reroll) {
-      newDices[color].selected.push(ind);
+      selected.push(ind);
     }
 
-    setDices(newDices);
+    setDices((prevDices) => ({
+      ...prevDices,
+      [color]: {
+        ...prevDices[color],
+        selected,
+      }
+    }));
   }
 
 

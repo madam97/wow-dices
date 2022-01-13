@@ -4,7 +4,7 @@ import { texts } from '../data/character.js';
 
 export default function DicePool({ character, threat, dices, stepAction, addDice, removeDice, toggleDice }) {
 
-  /** The selected row's color: red, blue or green */
+  /** The selected row's color: blue, red or green */
   const [selectedRow, setSelectedRow] = useState('');
 
   /** The X coordinate of the last touch event */
@@ -58,7 +58,7 @@ export default function DicePool({ character, threat, dices, stepAction, addDice
   /**
    * Adds or removes a dice based on the X coord of the last touch event
    * @param {number} clientX 
-   * @param {color} color red, blue or green
+   * @param {color} color blue, red or green
    */
   const handleTouchMove = (clientX, color) => {
     let diff = clientX - lastClientX;

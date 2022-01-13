@@ -13,7 +13,7 @@ $dice-sides:        (8, 5, 4, 1, 7, 6, 3, 2);
   margin: 0 ($dice-w * 0.25);
   font-size: $dice-size;
 
-  .dice-sm-container & { font-size: $dice-size * 0.8; }
+  .dice-sm-container & { font-size: $dice-size * 0.7; }
 
   &.dice-good::before,
   &.dice-bad::before {

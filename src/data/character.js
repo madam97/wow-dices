@@ -69,6 +69,32 @@ const species = {
   }
 };
 
+/** The characters' names */
+const names = {
+  alliance: {
+    paladin: 'Brandon Lightstone',
+    warlock: 'Sandrai Darkshine',
+    hunter: 'Burbonn Fang',
+    priest: 'Weefla Sorrowfall',
+    druid: 'Artumnis Moondream',
+    warrior: 'Shailara Witherblade',
+    mage: 'Brebo Bigshot',
+    rogue: 'Alissi Quicksting',
+    shaman: 'Khaadila'
+  },
+  horde: {
+    warrior: 'Grumbaz Crowsblood',
+    shaman: 'Zowka Shattertusk',
+    warlock: 'Leeam Sagewind',
+    mage: 'Sofeea Icecall',
+    hunter: 'Thundershot',
+    druid: 'Meadowfrey',
+    rogue: 'Dongon Swiftblade',
+    priest: 'Wennu Bloodsinger',
+    paladin: 'Vynan Sunblade'
+  }
+};
+
 /** Character texts grouped by factions, classes and species */
 const texts = {
   faction: {
@@ -163,4 +189,4 @@ const texts = {
   }
 };
 
-export { classes, species, texts };
+export { classes, species, names, texts };

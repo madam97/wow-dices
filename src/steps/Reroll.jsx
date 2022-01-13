@@ -1,6 +1,29 @@
+import { useEffect, useState } from 'react';
 import DiceGroup from '../components/DiceGroup';
 
 export default function Reroll({ threat, reroll, dices, stepAction, addDice, removeDice, toggleDice }) {
+
+  const [canReroll, setCanReroll] = useState(true);
+
+  useEffect(() => {
+    // Reroll btn is hidden if all of the dices are rerolled
+    if (reroll > 0) {
+      let countOfDices = 0;
+      let countOfRerolledDices = 0;
+
+      for (const color in dices) {
+        countOfDices += dices[color].count;
+        countOfRerolledDices += dices[color].rerolled.length;
+      }
+
+      setCanReroll(countOfRerolledDices < countOfDices);
+    }
+    // Reroll btn is hidden, because there are no more rerolls
+    else {
+      setCanReroll(false);
+    }
+  }, [reroll, dices]);
+
   return (
     <>
       {Object.keys(dices).map((color) => (
@@ -20,8 +43,8 @@ export default function Reroll({ threat, reroll, dices, stepAction, addDice, rem
       ))}
 
       <div className="row row-centered">
-        {reroll > 0 && <button className="btn" onClick={() => stepAction()}>Reroll</button>}
         <button className="btn" onClick={() => stepAction(true)}>End</button>
+        {canReroll && <button className="btn" onClick={() => stepAction()}>Reroll</button>}
       </div>
     </>
   )

@@ -5,7 +5,7 @@ import TokenDef from '../assets/images/token_def.png';
 
 export default function Resolution({ threat, dices, stepAction}) {
 
-  /** Count of the tokens of the colors: red, blue or green */
+  /** Count of the tokens of the colors: blue, red or green */
   const [tokens, setTokens] = useState({
     red: 0,
     blue: 0,
