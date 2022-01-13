@@ -8,17 +8,25 @@ import Character from './steps/Character';
 
 function App() {
 
+  /** The active step: character, dice-pool, reroll, resolution */
   const [activeStep, setActiveStep] = useState('character');
+
+  /** The chosen character */
   const [character, setCharacter] = useState({
     faction: '',
     class: '',
+    species: '',
     img: null,
     alt: ''
   });
+  
+  /** The enemy's threat value, if dice's value >= threat, the dice has good roll */
   const [threat, setThreat] = useState(5);
+
+  /** Number of possible rerolls */
   const [reroll, setReroll] = useState(1);
 
-
+  /** Red, blue and green dices' count, rolled values, selected and rerolled dices's indexes */
   const [dices, setDices] = useState({
     red: {
       count: 0,
@@ -43,15 +51,28 @@ function App() {
 
   /// STEP ACTIONS
 
+  /**
+   * Action for the character step
+   * @public
+   */
   const stepCharacter = () => {
     setActiveStep('dice-pool');
   }
 
+  /**
+   * Action for the dice pool step
+   * @public
+   */
   const stepDicePool = () => {
     rollAllDices();
     setActiveStep('reroll');
   }
 
+  /**
+   * Action for the reroll step
+   * @param {boolean} willChangeActiveStep If true, will set active step to resolution
+   * @public
+   */
   const stepReroll = (willChangeActiveStep = false) => {
     if (willChangeActiveStep) {
       setActiveStep('resolution');
@@ -61,6 +82,9 @@ function App() {
     }
   }
 
+  /**
+   * Action for the resolution step
+   */
   const stepResolution = () => {
     let newDices = { ...dices };
 
@@ -81,10 +105,9 @@ function App() {
   /// GAME VALUE METHODS
 
   /**
-   * Sets the threat value
+   * Sets the threat value (min = 1, max = 8)
    * @param {int} threat 
    */
-
   const setThreatValue = (threat) => {
     if (threat < 1) {
       threat = 1;
@@ -96,7 +119,7 @@ function App() {
   }
 
   /**
-   * Sets the reroll value and deselect selected dices
+   * Sets the reroll value (min = 0, max = 30) and deselect selected dices
    * @param {int} reroll 
    */
   const setRerollValue = (reroll) => {
@@ -122,35 +145,45 @@ function App() {
 
   /// DICE METHODS
 
-  const addDice = (color, value) => {
+  /**
+   * Add a new dice of the given color
+   * @param {string} color red, blue or green
+   * @param {number} value Value of the dice, if it is -1, will set a random value
+   * @public
+   */
+  const addDice = (color, value = -1) => {
     let newDices = { ...dices };
 
     // Max 10 dices
-    if (newDices[color].count === 10) {
-      return;
-    }
+    if (newDices[color].count < 10) {
+      ++newDices[color].count;
+      if (newDices[color].count > newDices[color].values.length) {
+        newDices[color].values.push(value !== -1 ? value : rollDice());
+      }
 
-    // Add dice
-    ++newDices[color].count;
-    if (newDices[color].count > newDices[color].values.length) {
-      newDices[color].values.push(value ? value : rollDice());
+      setDices(newDices);
     }
-    setDices(newDices);
   }
 
+  /**
+   * Removes the last rolled dice of the given color
+   * @param {string} color red, blue or green
+   * @public
+   */
   const removeDice = (color) => {
     let newDices = { ...dices };
 
     // Min 0 dices
-    if (newDices[color].count === 0) {
-      return;
+    if (newDices[color].count > 0) {
+      --newDices[color].count;
+
+      setDices(newDices);
     }
-
-    --newDices[color].count;
-
-    setDices(newDices);
   }
 
+  /**
+   * Rolls every dices
+   */
   const rollAllDices = () => {
     let newDices = { ...dices };
 
@@ -164,6 +197,10 @@ function App() {
     setDices(newDices);
   }
   
+  /**
+   * Rerolls every selected dices
+   * @returns Number of rerolled dices
+   */
   const rerollSelectedDices = () => {
     let newDices = { ...dices };
     
@@ -185,6 +222,10 @@ function App() {
     return countOfRerolls;
   }
 
+  /**
+   * Rolls a dice
+   * @returns Random number between 1 and 8
+   */
   const rollDice = () => {
     return Math.floor(Math.random() * 8) + 1;
   }

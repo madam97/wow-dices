@@ -1,63 +1,65 @@
 import { useEffect, useState } from 'react';
 import DiceGroup from '../components/DiceGroup';
+import { texts } from '../data/character.js';
 
 export default function DicePool({ character, threat, dices, stepAction, addDice, removeDice, toggleDice }) {
 
+  /** The selected row's color: red, blue or green */
   const [selectedRow, setSelectedRow] = useState('');
+
+  /** The X coordinate of the last touch event */
   const [lastClientX, setLastClientX] = useState(0);
+
+  /** The step's button text */
   const [btnText, setBtnText] = useState();
 
   useEffect(() => {
-    const texts = {
-      faction: {
-        alliance: [
-          'For the Alliance!',
-        ],
-        horde: [
-          'For the Horde!',
-        ]
-      },
-      class: {
-        warrior: [],
-        hunter: [],
-        rogue: [],
-        paladin: [
-          'Light give me strength!',
-          'Light give me hope!',
-          'Justice will be served!'
-        ],
-        priest: [
-          'By the power of the Light, burn!',
-          'Begone, spawn of darkness!'
-        ],
-        mage: [],
-        warlock: [],
-        druid: [],
-        shaman: []
+    /**
+     * Returns the randomized dice pool step btn text
+     * @returns {string}
+     */
+    const getBtnText = () => {
+      let text = '';
+      let ind = Math.floor(
+        Math.random() * (
+          texts.class[character.class].length + 
+          texts.faction[character.faction].length + 
+          texts.species[character.species].length
+        )
+      );
+
+      // Class text
+      if (ind < texts.class[character.class].length) {
+        text = texts.class[character.class][ind];
       }
-    };
-
-    let text = '';
-    let ind = Math.floor(Math.random() * (texts.class[character.class].length + texts.faction[character.faction].length));
-
-    // Class text
-    if (ind < texts.class[character.class].length) {
-      text = texts.class[character.class][ind];
+      // Faction text
+      else if (ind - texts.class[character.class].length < texts.faction[character.faction].length) {
+        text = texts.faction[character.faction][ ind - texts.class[character.class].length ];
+      }
+      // Species text
+      else {
+        text = texts.species[character.species][ ind - texts.class[character.class].length - texts.faction[character.faction].length ];
+      }
+  
+      return text;
     }
-    // Faction text
-    else {
-      text = texts.faction[character.faction][ind - texts.class[character.class].length];
-    }
+  
+    setBtnText(getBtnText());
+  }, [character]);
 
-    console.log(texts.class[character.class].length,' + ',texts.faction[character.faction].length, ind, text);
-
-    setBtnText(text);
-  }, []);
-
+  /**
+   * Saves the X coord of the last touch event
+   * @param {number} clientX 
+   */
   const handleTouchStart = (clientX) => {
     setLastClientX(clientX);
   }
 
+  /**
+   * Adds or removes a dice based on the X coord of the last touch event
+   * @param {number} clientX 
+   * @param {color} color red, blue or green
+   */
   const handleTouchMove = (clientX, color) => {
     let diff = clientX - lastClientX;
 
@@ -77,6 +79,9 @@ export default function DicePool({ character, threat, dices, stepAction, addDice
     setSelectedRow(color);
   }
 
+  /**
+   * Removes the selected row's color after the touch event ends
+   */
   const handleTouchEnd = () => {
     setSelectedRow('');
   }

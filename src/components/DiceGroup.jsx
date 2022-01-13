@@ -2,6 +2,10 @@ import Dice from "./Dice";
 
 const DiceGroup = ({ willShowCount, willGroupDices, dices, color, threat, toggleDice }) => {
 
+  /**
+   * Sort the dices by their values using descending order
+   * @returns {Map}
+   */
   const sortDiceValues = () => {
     const diceValues = new Map();
     for (let i = 0; i < dices.count; ++i) {

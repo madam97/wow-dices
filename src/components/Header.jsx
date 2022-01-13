@@ -4,14 +4,29 @@ import Background from '../assets/images/paper.png';
 
 const Header = ({ character, threat, reroll, setActiveStep, setThreat, setReroll }) => {
 
+  /** If true, popup to set threat is seen */
   const [showThreatPopup, setShowThreatPopup] = useState(false);
+
+  /** If true, popup to set reroll is seen */
   const [showRerollPopup, setShowRerollPopup] = useState(false);
+
+  /** The X coordinate of the last touch event */
   const [lastClientX, setLastClientX] = useState(0);
   
+  /**
+   * Saves the X coord of the last touch event
+   * @param {number} clientX 
+   */
   const handleTouchStart = (clientX) => {
     setLastClientX(clientX);
   }
 
+  /**
+   * Increases or decreases the value of the given value (threat, reroll)
+   * @param {number} clientX 
+   * @param {number} value 
+   * @param {function} setValue 
+   */
   const handleTouchMove = (clientX, value, setValue) => {
     let diff = clientX - lastClientX;
 

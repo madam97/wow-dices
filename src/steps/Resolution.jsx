@@ -5,6 +5,7 @@ import TokenDef from '../assets/images/token_def.png';
 
 export default function Resolution({ threat, dices, stepAction}) {
 
+  /** Count of the tokens of the colors: red, blue or green */
   const [tokens, setTokens] = useState({
     red: 0,
     blue: 0,
@@ -12,19 +13,28 @@ export default function Resolution({ threat, dices, stepAction}) {
   });
 
   useEffect(() => {
-    const newTokens = {};
-
-    Object.keys(dices).map((color) => {
-      newTokens[color] = 0;
-      for (let value of dices[color].values) {
-        if (value >= threat) {
-          ++newTokens[color];
+    /**
+     * Return the count of the tokens of the colors
+     * @returns {object}
+     */
+    const getTokens = () => {
+      const newTokens = {};
+  
+      Object.keys(dices).forEach((color) => {
+        newTokens[color] = 0;
+        for (let value of dices[color].values) {
+          if (value >= threat) {
+            ++newTokens[color];
+          }
         }
-      }
-    });
+      });
+  
+      return newTokens;
+    }
 
-    setTokens(newTokens);
+    setTokens(getTokens());
   }, [threat, dices]);
+
 
   return (
     <>
