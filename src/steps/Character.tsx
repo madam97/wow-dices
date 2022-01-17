@@ -1,16 +1,26 @@
-import { classes, species, names } from '../data/character.js';
+import { classes, species, names } from '../data/character';
 
-export default function Character({ character, stepAction, setCharacter }) {
+type CharacterProps = {
+  character: TCharacter, 
+  stepAction(): void, 
+  setCharacter(character: TCharacter): void
+};
+
+const Character = ({
+  character, 
+  stepAction, 
+  setCharacter
+}: CharacterProps): JSX.Element => {
   return (
     <div className="step step-character">
       {character.name === '' && <p>Choose your character</p>}
       {character.name !== '' && <p>{character.name}</p>}
 
       <div>
-        {Object.keys(species).map((faction) => (
+        {Object.keys(species).map((faction): JSX.Element => (
           <div key={faction}>
-            {Object.keys(species[faction]).map((c) => {
-              let tmpCharacter = {
+            {Object.keys(species[faction]).map((c): JSX.Element => {
+              let tmpCharacter: TCharacter = {
                 name: names[faction][c],
                 faction: faction, 
                 class: c, 
@@ -43,3 +53,5 @@ export default function Character({ character, stepAction, setCharacter }) {
     </div>
   )
 }
+
+export default Character;

@@ -1,0 +1,1 @@
+type TStep = 'character' | 'dice-pool' | 'reroll' | 'resolution';

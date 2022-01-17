@@ -2,22 +2,38 @@ import { useState } from 'react';
 import PopupNumber from './PopupNumber';
 import Background from '../assets/images/paper.png';
 
-const Header = ({ character, threat, reroll, setActiveStep, setThreat, setReroll }) => {
+type HeaderProps = { 
+  character: TCharacter, 
+  threat: number, 
+  reroll?: number, 
+  setActiveStep(activeStep: TStep): void, 
+  setThreat(threat: number): void, 
+  setReroll(reroll: number): void 
+};
+
+const Header = ({ 
+  character, 
+  threat, 
+  reroll = -1, 
+  setActiveStep, 
+  setThreat, 
+  setReroll
+}: HeaderProps): JSX.Element => {
 
   /** If true, popup to set threat is seen */
-  const [showThreatPopup, setShowThreatPopup] = useState(false);
+  const [showThreatPopup, setShowThreatPopup] = useState<boolean>(false);
 
   /** If true, popup to set reroll is seen */
-  const [showRerollPopup, setShowRerollPopup] = useState(false);
+  const [showRerollPopup, setShowRerollPopup] = useState<boolean>(false);
 
   /** The X coordinate of the last touch event */
-  const [lastClientX, setLastClientX] = useState(0);
+  const [lastClientX, setLastClientX] = useState<number>(0);
   
   /**
    * Saves the X coord of the last touch event
    * @param {number} clientX 
    */
-  const handleTouchStart = (clientX) => {
+  const handleTouchStart = (clientX: number): void => {
     setLastClientX(clientX);
   }
 
@@ -27,7 +43,7 @@ const Header = ({ character, threat, reroll, setActiveStep, setThreat, setReroll
    * @param {number} value 
    * @param {function} setValue 
    */
-  const handleTouchMove = (clientX, value, setValue) => {
+  const handleTouchMove = (clientX: number, value: number, setValue: {(value: number): void}): void => {
     let diff = clientX - lastClientX;
 
     if (Math.abs(diff) >= 30) {
@@ -79,14 +95,10 @@ const Header = ({ character, threat, reroll, setActiveStep, setThreat, setReroll
         }
       </div>
       
-      {showThreatPopup && <PopupNumber value={threat} max="8" setValue={setThreat} setShowPopup={setShowThreatPopup} />}
-      {showRerollPopup && reroll > -1 && <PopupNumber value={reroll} min="0" max="30" setValue={setReroll} setShowPopup={setShowRerollPopup} />}
+      {showThreatPopup && <PopupNumber value={threat} max={8} setValue={setThreat} setShowPopup={setShowThreatPopup} />}
+      {showRerollPopup && reroll > -1 && <PopupNumber value={reroll} min={0} max={30} setValue={setReroll} setShowPopup={setShowRerollPopup} />}
     </div>
   )
 }
-
-Header.defaultProps = {
-  reroll: -1
-};
 
 export default Header;

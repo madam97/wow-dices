@@ -9,10 +9,10 @@ import Character from './steps/Character';
 function App() {
 
   /** The active step: character, dice-pool, reroll, resolution */
-  const [activeStep, setActiveStep] = useState('character');
+  const [activeStep, setActiveStep] = useState<TStep>('character');
 
   /** The chosen character */
-  const [character, setCharacter] = useState({
+  const [character, setCharacter] = useState<TCharacter>({
     name: '',
     faction: '',
     class: '',
@@ -22,13 +22,13 @@ function App() {
   });
   
   /** The enemy's threat value, if dice's value >= threat, the dice has good roll */
-  const [threat, setThreat] = useState(5);
+  const [threat, setThreat] = useState<number>(5);
 
   /** Number of possible rerolls */
-  const [reroll, setReroll] = useState(1);
+  const [reroll, setReroll] = useState<number>(1);
 
   /** Red, blue and green dices' count, rolled values, selected and rerolled dices's indexes */
-  const [dices, setDices] = useState({
+  const [dices, setDices] = useState<TDices>({
     blue: {
       count: 0,
       values: [],
@@ -56,7 +56,7 @@ function App() {
    * Action for the character step
    * @public
    */
-  const stepCharacter = () => {
+  const stepCharacter = (): void => {
     setActiveStep('dice-pool');
   }
 
@@ -64,7 +64,7 @@ function App() {
    * Action for the dice pool step
    * @public
    */
-  const stepDicePool = () => {
+  const stepDicePool = (): void => {
     rollAllDices();
     setActiveStep('reroll');
   }
@@ -74,7 +74,7 @@ function App() {
    * @param {boolean} willChangeActiveStep If true, will set active step to resolution
    * @public
    */
-  const stepReroll = (willChangeActiveStep = false) => {
+  const stepReroll = (willChangeActiveStep: boolean = false): void => {
     if (willChangeActiveStep) {
       setActiveStep('resolution');
     } else {
@@ -86,8 +86,11 @@ function App() {
   /**
    * Action for the resolution step
    */
-  const stepResolution = () => {
-    for (const color in dices) {
+  const stepResolution = (): void => {
+    let key: TColor;
+    for (key in dices) {
+      const color: TColor = key;
+
       setDices((prevDices) => ({
         ...prevDices,
         [color]: {
@@ -110,7 +113,7 @@ function App() {
    * Sets the threat value (min = 1, max = 8)
    * @param {int} threat 
    */
-  const setThreatValue = (threat) => {
+  const setThreatValue = (threat: number): void => {
     if (threat < 1) {
       threat = 1;
     } else if (threat > 8) {
@@ -124,9 +127,12 @@ function App() {
    * Sets the reroll value (min = 0, max = 30) and deselect selected dices
    * @param {int} reroll 
    */
-  const setRerollValue = (reroll) => {
+  const setRerollValue = (reroll: number): void => {
     // Deselect selected dices
-    for (const color in dices) {
+    let key: TColor;
+    for (key in dices) {
+      const color: TColor = key;
+
       setDices((prevDices) => ({
         ...prevDices,
         [color]: {
@@ -151,11 +157,11 @@ function App() {
 
   /**
    * Add a new dice of the given color
-   * @param {string} color blue, red or green
+   * @param {TColor} color blue, red or green
    * @param {number} value Value of the dice, if it is -1, will set a random value
    * @public
    */
-  const addDice = (color, value = -1) => {
+  const addDice = (color: TColor, value: number = -1): void => {
     // Max 10 dices
     if (dices[color].count < 10) {
       const count = dices[color].count + 1;
@@ -178,10 +184,10 @@ function App() {
 
   /**
    * Removes the last rolled dice of the given color
-   * @param {string} color blue, red or green
+   * @param {TColor} color blue, red or green
    * @public
    */
-  const removeDice = (color) => {
+  const removeDice = (color: TColor): void => {
     // Min 0 dices
     if (dices[color].count > 0) {
       const count = dices[color].count - 1;
@@ -199,9 +205,11 @@ function App() {
   /**
    * Rolls every dices
    */
-  const rollAllDices = () => {
-    for (const color in dices) {
-      const values = [];
+  const rollAllDices = (): void => {
+    let key: TColor;
+    for (key in dices) {
+      const color: TColor = key;
+      const values: Array<number> = [];
 
       for (let i = 0; i < dices[color].count; ++i) {
         values.push( rollDice() );
@@ -221,10 +229,12 @@ function App() {
    * Rerolls every selected dices
    * @returns Number of rerolled dices
    */
-  const rerollSelectedDices = () => {
+  const rerollSelectedDices = (): number => {
     let countOfRerolls = 0;
+    let key: TColor;
+    for (key in dices) {
+      const color: TColor = key;
 
-    for (const color in dices) {
       if (dices[color].selected.length > 0) {
         const values = dices[color].values.slice();
         const rerolled = dices[color].rerolled.slice();
@@ -256,22 +266,23 @@ function App() {
    * Rolls a dice
    * @returns Random number between 1 and 8
    */
-  const rollDice = () => {
+  const rollDice = (): number => {
     return Math.floor(Math.random() * 8) + 1;
   }
 
   /**
    * Select or deselect dice
-   * @param {string} color 
+   * @param {TColor} color 
    * @param {int} ind 
    */
-  const toggleDice = (color, ind) => {
+  const toggleDice = (color: TColor, ind: number) => {
     const selected = dices[color].selected.slice();
 
     // Max 
     let selectedCount = 0;
-    for (let color in dices) {
-      selectedCount += dices[color].selected.length;
+    let tmpColor: TColor;
+    for (tmpColor in dices) {
+      selectedCount += dices[tmpColor].selected.length;
     }
 
     // Select / deselect dice
@@ -350,6 +361,7 @@ function App() {
               threat={threat} 
               dices={dices}
               stepAction={stepResolution} 
+              toggleDice={toggleDice}
             />
           }
         </div>

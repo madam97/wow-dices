@@ -18,7 +18,7 @@ import HDruid from '../assets/images/char/h_druid.png';
 import HShaman from '../assets/images/char/h_shaman.png';
 
 /** Faction-class-image connections */
-const classes = {
+const classes: Record<string, Record<string, any>> = {
   alliance: {
     warrior: AWarrior,
     hunter: AHunter,
@@ -44,7 +44,7 @@ const classes = {
 };
 
 /** The class-species connections */
-const species = {
+const species: Record<string, Record<string, string>> = {
   alliance: {
     paladin: 'human',
     warlock: 'human',
@@ -70,7 +70,7 @@ const species = {
 };
 
 /** The characters' names */
-const names = {
+const names: Record<string, Record<string, string>> = {
   alliance: {
     paladin: 'Brandon Lightstone',
     warlock: 'Sandrai Darkshine',
@@ -96,7 +96,7 @@ const names = {
 };
 
 /** Character texts grouped by factions, classes and species */
-const texts = {
+const texts: Record<string, Record<string, Array<string>>> = {
   faction: {
     alliance: [
       'For the Alliance!',

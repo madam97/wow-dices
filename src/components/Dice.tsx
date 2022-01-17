@@ -1,18 +1,38 @@
 import { useEffect, useState } from "react";
 
-const Dice = ({ index, value, color, threat, count, selectedDices, rerolledDices, toggleDice }) => {
+type DiceProps = {
+  index?: number,
+  value?: number,
+  color: TColor,
+  threat?: number,
+  count?: number,
+  selectedDices?: Array<number>,
+  rerolledDices?: Array<number>,
+  toggleDice(color: string, ind: number): void
+};
+
+const Dice = ({ 
+  index = -1, 
+  value = 0, 
+  color, 
+  threat = -1, 
+  count = -1, 
+  selectedDices = [], 
+  rerolledDices = [], 
+  toggleDice 
+}: DiceProps): JSX.Element => {
 
   /** If true, the dice can be selected */
-  const [canSelect, setCanSelect] = useState(index > -1 && rerolledDices.indexOf(index) === -1);
+  const [canSelect, setCanSelect] = useState<boolean>(index > -1 && rerolledDices.indexOf(index) === -1);
 
   /** The CSS classes of the dice */
-  const [diceClass, setDiceClass] = useState(`dice dice-${color} dice-0`);
+  const [diceClass, setDiceClass] = useState<string>(`dice dice-${color} dice-0`);
 
   useEffect(() => {
     /**
      * Sets the CSS classes of the dice
      */
-    const setClass = () => {
+    const setClass = (): void => {
       let newDiceClass = `dice dice-${color} dice-${value}`;
 
       if (threat > -1 && value >= threat) {
@@ -37,8 +57,7 @@ const Dice = ({ index, value, color, threat, count, selectedDices, rerolledDices
    * @param {string} color blue, red or green
    * @param {number} index Index of the dice
    */
-  const handleClick = (color, index) => {
-    console.log(canSelect, color, index); 
+  const handleClick = (color: string, index: number): void => {
     if (canSelect) {
       toggleDice(color, index);
     }
@@ -61,15 +80,5 @@ const Dice = ({ index, value, color, threat, count, selectedDices, rerolledDices
     </span>
   )
 }
-
-Dice.defaultProps = {
-  index: -1,
-  value: 0,
-  threat: -1,
-  count: -1,
-  selectedDices: [],
-  rolledDices: [],
-  toggleDice: (color, index) => {}
-};
 
 export default Dice;
